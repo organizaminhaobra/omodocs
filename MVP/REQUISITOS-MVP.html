@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Documento de Requisitos do MVP  Organiza Minha Obra</title>
+</head>
+
+<body>
+  <style>
+    :root {
+      --ground: #f4efe6;
+      --ground-2: #efe8db;
+      --surface: #ffffff;
+      --surface-2: #faf6ef;
+      --ink: #2a2820;
+      --ink-soft: #6d6a5b;
+      --ink-faint: #94907f;
+      --line: #e6ddcd;
+      --line-strong: #d8cdb8;
+      --olive: #6f7350;
+      --olive-deep: #3a3d2b;
+      --band: #24271e;
+      --band-soft: #33362a;
+      --tan: #b18a4e;
+      --wood: #8a6b4f;
+      --accent-wash: #eef0e2;
+      --accent-wash-line: #d5d9be;
+
+      --font-display: "Helvetica Neue", "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      --measure: 43rem;
+      --radius: 14px;
+      --radius-sm: 9px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ground: #191b15;
+        --ground-2: #15170f;
+        --surface: #23261d;
+        --surface-2: #282b21;
+        --ink: #efeadc;
+        --ink-soft: #b3ae9c;
+        --ink-faint: #8c8874;
+        --line: #383b2d;
+        --line-strong: #454935;
+        --olive: #a7ac78;
+        --olive-deep: #c3c795;
+        --band: #12140d;
+        --band-soft: #20221a;
+        --tan: #cba76b;
+        --wood: #b58a67;
+        --accent-wash: #262a1b;
+        --accent-wash-line: #3d422b;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --ground: #191b15;
+      --ground-2: #15170f;
+      --surface: #23261d;
+      --surface-2: #282b21;
+      --ink: #efeadc;
+      --ink-soft: #b3ae9c;
+      --ink-faint: #8c8874;
+      --line: #383b2d;
+      --line-strong: #454935;
+      --olive: #a7ac78;
+      --olive-deep: #c3c795;
+      --band: #12140d;
+      --band-soft: #20221a;
+      --tan: #cba76b;
+      --wood: #b58a67;
+      --accent-wash: #262a1b;
+      --accent-wash-line: #3d422b;
+    }
+
+    :root[data-theme="light"] {
+      --ground: #f4efe6;
+      --ground-2: #efe8db;
+      --surface: #ffffff;
+      --surface-2: #faf6ef;
+      --ink: #2a2820;
+      --ink-soft: #6d6a5b;
+      --ink-faint: #94907f;
+      --line: #e6ddcd;
+      --line-strong: #d8cdb8;
+      --olive: #6f7350;
+      --olive-deep: #3a3d2b;
+      --band: #24271e;
+      --band-soft: #33362a;
+      --tan: #b18a4e;
+      --wood: #8a6b4f;
+      --accent-wash: #eef0e2;
+      --accent-wash-line: #d5d9be;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--ground);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .wrap {
+      max-width: 62rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .col {
+      max-width: var(--measure);
+      margin-inline: auto;
+    }
+
+    /* ---------- Header band ---------- */
+    .band {
+      background: var(--band);
+      color: #ece7d8;
+      padding: 2.6rem 0 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .band-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 2.4rem;
+    }
+
+    .wordmark {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.82rem;
+      line-height: 1.08;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: #f1ecdd;
+    }
+
+    .wordmark span {
+      display: block;
+    }
+
+    .wordmark .thin {
+      color: #9ea27f;
+    }
+
+    .badge {
+      font-family: var(--font-display);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #d9d2c0;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      padding: 0.42rem 0.85rem;
+      white-space: nowrap;
+    }
+
+    .eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #9ea27f;
+      margin: 0 0 1rem;
+    }
+
+    h1.title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(2.1rem, 6vw, 3.4rem);
+      line-height: 1.03;
+      letter-spacing: -0.015em;
+      margin: 0;
+      color: #f6f1e4;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 1.4rem 0 0;
+      color: #cfc9b8;
+      font-size: 1.06rem;
+      line-height: 1.68;
+      max-width: 40rem;
+    }
+
+    /* Gantt-inspired signature divider */
+    .gantt {
+      display: flex;
+      gap: 6px;
+      margin-top: 2.3rem;
+    }
+
+    .gantt i {
+      display: block;
+      height: 9px;
+      border-radius: 3px;
+      opacity: 0.95;
+    }
+
+    .gantt i:nth-child(1) {
+      width: 12%;
+      background: #8f9163;
+      margin-left: 2%;
+    }
+
+    .gantt i:nth-child(2) {
+      width: 16%;
+      background: #b3a06a;
+    }
+
+    .gantt i:nth-child(3) {
+      width: 22%;
+      background: #b58a52;
+    }
+
+    .gantt i:nth-child(4) {
+      width: 14%;
+      background: #9c6f45;
+    }
+
+    .gantt i:nth-child(5) {
+      width: 18%;
+      background: #b9985a;
+    }
+
+    .gantt i:nth-child(6) {
+      width: 10%;
+      background: #7c7d4f;
+    }
+
+    /* ---------- Body ---------- */
+    main {
+      padding: 3rem 0 1rem;
+    }
+
+    section.block {
+      margin-bottom: 2.9rem;
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.85rem;
+      margin: 0 0 1.1rem;
+    }
+
+    .sec-num {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      color: var(--olive);
+      border: 1.5px solid var(--accent-wash-line);
+      background: var(--accent-wash);
+      border-radius: 999px;
+      min-width: 2rem;
+      height: 2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.42rem;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin: 0;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+
+    p {
+      margin: 0 0 1.05rem;
+    }
+
+    .col>p:last-child {
+      margin-bottom: 0;
+    }
+
+    strong {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    a {
+      color: var(--olive);
+    }
+
+    .muted {
+      color: var(--ink-soft);
+    }
+
+    /* Intro callout */
+    .intro {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--olive);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 3rem;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.66;
+    }
+
+    .intro strong {
+      color: var(--ink);
+    }
+
+    /* Lists */
+    ul.clean {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    ul.clean li {
+      position: relative;
+      padding-left: 1.4rem;
+      margin-bottom: 0.7rem;
+    }
+
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--tan);
+    }
+
+    /* Module table */
+    .table-scroll {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 32rem;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 0.85rem 1.1rem;
+      vertical-align: top;
+    }
+
+    thead th {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-weight: 700;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--surface-2);
+    }
+
+    tbody td {
+      border-bottom: 1px solid var(--line);
+      font-size: 0.97rem;
+      line-height: 1.55;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    td.mod {
+      white-space: nowrap;
+    }
+
+    .chip {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.01em;
+      color: var(--olive-deep);
+      background: var(--accent-wash);
+      border: 1px solid var(--accent-wash-line);
+      border-radius: var(--radius-sm);
+      padding: 0.32rem 0.6rem;
+    }
+
+    /* Flow steps */
+    .flow {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .flow .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.9rem;
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+    }
+
+    .flow .tag {
+      font-family: var(--font-display);
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--olive);
+      border-radius: 999px;
+      padding: 0.34rem 0.7rem;
+      white-space: nowrap;
+      margin-top: 0.15rem;
+    }
+
+    .flow .step p {
+      margin: 0;
+      font-size: 0.97rem;
+    }
+
+    /* Rules: two columns */
+    .rules {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .rule-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.3rem;
+    }
+
+    .rule-card h3 {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin: 0 0 0.75rem;
+      font-weight: 700;
+    }
+
+    .rule-card ul.clean li {
+      font-size: 0.94rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .rule-card.deny ul.clean li::before {
+      background: var(--wood);
+    }
+
+    .rule-card.allow ul.clean li::before {
+      background: var(--olive);
+    }
+
+    .persona-label {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--olive);
+      font-weight: 700;
+      margin: 0 0 0.75rem;
+    }
+
+    .persona-label+.rules,
+    .persona-label+.rule-card {
+      margin-top: 0;
+    }
+
+    ul.clean.two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 1.4rem;
+    }
+
+    ul.clean.two-col li {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 640px) {
+      ul.clean.two-col {
+        grid-template-columns: 1fr;
+      }
+
+      ul.clean.two-col li {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    /* Out of scope */
+    .scope {
+      background: var(--surface-2);
+      border: 1px dashed var(--line-strong);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+    }
+
+    ul.out {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    ul.out li {
+      position: relative;
+      padding-left: 1.7rem;
+      margin-bottom: 0.7rem;
+      font-size: 0.98rem;
+    }
+
+    ul.out li:last-child {
+      margin-bottom: 0;
+    }
+
+    ul.out li::before {
+      content: "\00d7";
+      position: absolute;
+      left: 0;
+      top: -0.05em;
+      color: var(--wood);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Open questions  the CTA */
+    .open {
+      display: grid;
+      gap: 1.1rem;
+    }
+
+    .q {
+      background: var(--surface);
+      border: 1px solid var(--accent-wash-line);
+      border-top: 3px solid var(--tan);
+      border-radius: var(--radius);
+      padding: 1.3rem 1.5rem;
+    }
+
+    .q .qn {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--tan);
+      margin: 0 0 0.5rem;
+    }
+
+    .q h3 {
+      font-family: var(--font-display);
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin: 0 0 0.6rem;
+      color: var(--ink);
+    }
+
+    .q p {
+      font-size: 0.96rem;
+      margin: 0 0 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .opts {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 0.5rem;
+    }
+
+    .opt {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.7rem;
+      align-items: start;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 0.9rem;
+      font-size: 0.93rem;
+    }
+
+    .opt b {
+      font-family: var(--font-display);
+      color: var(--olive-deep);
+      background: var(--accent-wash);
+      border: 1px solid var(--accent-wash-line);
+      border-radius: 6px;
+      width: 1.5rem;
+      height: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 3.5rem;
+      border-top: 1px solid var(--line);
+      background: var(--ground-2);
+    }
+
+    .foot-inner {
+      padding: 2rem 0 2.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .foot-mark {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .foot-mark .thin {
+      color: var(--ink-faint);
+      display: block;
+    }
+
+    .foot-contact {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      text-align: right;
+    }
+
+    .foot-contact a {
+      color: var(--olive);
+      text-decoration: none;
+    }
+
+    /* Entrance motion */
+    .fade {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: rise 0.7s cubic-bezier(.2, .7, .3, 1) forwards;
+    }
+
+    .fade.d1 {
+      animation-delay: 0.05s;
+    }
+
+    .fade.d2 {
+      animation-delay: 0.13s;
+    }
+
+    .fade.d3 {
+      animation-delay: 0.21s;
+    }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        font-size: 16px;
+      }
+
+      .rules {
+        grid-template-columns: 1fr;
+      }
+
+      .band {
+        padding: 2rem 0 2.2rem;
+      }
+
+      .sec-head {
+        gap: 0.65rem;
+      }
+    }
+  </style>
+
+  <header class="band">
+    <div class="wrap">
+      <div class="band-top">
+        <div class="wordmark fade">
+          <span>Organiza</span>
+          <span>Minha</span>
+          <span class="thin">Obra</span>
+        </div>
+        <div class="badge fade">v1 · para revisão</div>
+      </div>
+      <div class="col">
+        <p class="eyebrow fade d1">Documento de Requisitos · MVP</p>
+        <h1 class="title fade d1">O aplicativo onde o arquiteto registra a obra e o cliente acompanha.</h1>
+        <p class="lede fade d2">
+          Esta é a evolução do BRD. Reúne, em linguagem de negócio, <strong style="color:#efe9da">o que o
+            MVP vai fazer</strong>, <strong style="color:#efe9da">o que fica de fora</strong> e os <strong
+            style="color:#efe9da">pontos que ainda
+            precisam da decisão</strong>. Leiam e apontem.
+        </p>
+        <div class="gantt fade d3" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="col">
+
+        <div class="intro">
+          <strong>Como ler este documento.</strong> As seções 1 a 6 descrevem o produto. A seção 7 lista o
+          que já foi decidido, a 8 mostra o que fica <em>fora</em> do MVP, e a <strong>seção 9 traz o que
+            depende de vocês</strong>  é a parte mais importante para esta revisão.
+        </div>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">1</span>
+            <h2>Objetivo</h2>
+          </div>
+          <p>Um aplicativo para <strong>comunicação entre arquiteto e cliente durante a execução da obra</strong>.
+            O arquiteto <strong>registra a obra uma única vez</strong> e o cliente <strong>acompanha tudo em tempo
+              real</strong>. As solicitações de pagamento ficam organizadas automaticamente, em um só lugar.</p>
+          <p class="muted">O sistema <strong>não é um ERP de obras</strong>, nem um software completo de orçamento
+            ou planejamento  o foco é tornar a comunicação simples e transparente.</p>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">2</span>
+            <h2>Para quem é</h2>
+          </div>
+          <ul class="clean">
+            <li><strong>Arquiteto / escritório</strong> (usuário principal): alimenta todas as informações da obra.
+            </li>
+            <li><strong>Cliente</strong> (usuário secundário): apenas <strong>acompanha</strong>  acesso somente
+              leitura, não altera nada.</li>
+          </ul>
+          <p style="margin-top:1rem">Ponto importante: <strong>escritório e arquiteto são a mesma conta</strong> 
+            cada conta gerencia <strong>várias obras de vários clientes</strong>.</p>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">3</span>
+            <h2>Como funciona</h2>
+          </div>
+          <ul class="clean">
+            <li>O <strong>arquiteto</strong> cadastra a obra, o cronograma, os fornecedores, as compras da semana e
+              publica atualizações no feed.</li>
+            <li>O <strong>cliente</strong> recebe um convite, acessa o app e acompanha o andamento e o que precisa
+              pagar.</li>
+            <li><strong>Cada escritório enxerga apenas os seus próprios dados</strong>  não há cruzamento entre
+              escritórios.</li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">4</span>
+            <h2>Módulos do MVP</h2>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Módulo</th>
+                  <th>O que faz</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mod"><span class="chip">Login / Acesso</span></td>
+                  <td>Entrada do arquiteto e do cliente.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Obras e clientes</span></td>
+                  <td>O arquiteto cria a obra e vincula o cliente.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Dashboard</span></td>
+                  <td>Visão rápida da obra: orçamento previsto, valor gasto, valor pendente, pendências da semana e
+                    última atualização.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Cronograma</span></td>
+                  <td>Etapas da obra em barras, com o dia atual, dependências entre etapas e percentual de conclusão.
+                    O arquiteto edita; o cliente visualiza.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Feed</span></td>
+                  <td>Linha do tempo com o andamento da obra (texto + fotos). O que o arquiteto publica aparece para o
+                    cliente.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Acompanhamento Semanal</span></td>
+                  <td>Registro do que foi comprado na semana (material e mão de obra): data, tipo, item, fornecedor e
+                    valor.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Pendências</span></td>
+                  <td>O que o cliente precisa pagar na semana, com total. O cliente só visualiza.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Fornecedores</span></td>
+                  <td>Cadastro simples de fornecedores, para preencher as pendências automaticamente.</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Configurações</span></td>
+                  <td>Onde o arquiteto ajusta parâmetros da obra (ex.: dia de fechamento da semana).</td>
+                </tr>
+                <tr>
+                  <td class="mod"><span class="chip">Notificações</span></td>
+                  <td>Central de avisos dentro do app.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">5</span>
+            <h2>Fluxo da semana</h2>
+          </div>
+          <div class="flow">
+            <div class="step">
+              <span class="tag">Durante a semana</span>
+              <p>O arquiteto atualiza o feed, registra compras e mão de obra, e ajusta o cronograma.</p>
+            </div>
+            <div class="step">
+              <span class="tag">Dia de fechamento</span>
+              <p>No dia de fechamento (<strong>padrão: sexta-feira</strong>), o sistema organiza os lançamentos,
+                soma os valores e disponibiliza as pendências ao cliente. <strong>Esse dia é configurável pelo
+                  arquiteto.</strong></p>
+            </div>
+            <div class="step">
+              <span class="tag">Cliente</span>
+              <p>O cliente é <strong>notificado</strong> e vê o que precisa pagar na semana.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">6</span>
+            <h2>Regras de negócio</h2>
+          </div>
+
+          <p class="persona-label">Cliente</p>
+          <div class="rules">
+            <div class="rule-card">
+              <h3>Pode</h3>
+              <ul class="clean">
+                <li>Visualizar dashboard</li>
+                <li>Visualizar feed</li>
+                <li>Visualizar pendências</li>
+                <li>Visualizar acompanhamento semanal</li>
+              </ul>
+            </div>
+            <div class="rule-card deny">
+              <h3>Não pode</h3>
+              <ul class="clean">
+                <li>Editar, adicionar ou excluir</li>
+                <li>Comentar</li>
+                <li>Enviar comprovantes</li>
+                <li>Marcar pagamentos</li>
+              </ul>
+            </div>
+          </div>
+
+          <p class="persona-label" style="margin-top:1.5rem">Arquiteto / escritório</p>
+          <div class="rule-card allow">
+            <h3>Pode</h3>
+            <ul class="clean two-col">
+              <li>Criar obras e clientes</li>
+              <li>Editar o cronograma</li>
+              <li>Cadastrar fornecedores</li>
+              <li>Cadastrar compras e mão de obra</li>
+              <li>Publicar no feed</li>
+              <li>Anexar arquivos</li>
+              <li>Editar qualquer informação</li>
+            </ul>
+          </div>
+
+          <p style="margin-top:1rem" class="muted"><strong>O pagamento acontece fora do sistema</strong>
+            (por enquanto), combinado <strong>diretamente com o arquiteto</strong>.</p>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">7</span>
+            <h2>Decisões já tomadas</h2>
+          </div>
+          <ul class="clean">
+            <li><strong>Uma conta por escritório/arquiteto</strong>, gerenciando várias obras de vários clientes.
+            </li>
+            <li><strong>O cliente tem um único acesso</strong>  mesmo que, no futuro, seja atendido por mais de um
+              escritório que use o app.</li>
+            <li><strong>Convite do cliente:</strong> o arquiteto cadastra o cliente e o primeiro acesso é enviado por
+              <strong>WhatsApp ou e-mail</strong>. Depois disso, os avisos ficam dentro do próprio app.
+            </li>
+            <li><strong>Orçamento configurável</strong> e editável a qualquer momento, com <strong>registro de
+                auditoria</strong> das alterações (quem mudou e quando).</li>
+            <li><strong>Relatório da obra</strong> configurável, com visão geral e detalhada.</li>
+            <li><strong>Histórico por semana:</strong> é possível navegar pelas semanas anteriores da obra.</li>
+            <li><strong>Acesso do cliente:</strong> mantido <strong>enquanto o arquiteto mantiver a conta ativa
+                no app</strong>. Os dados da obra ficam disponíveis e, após <strong>2 anos</strong>, são arquivados.
+            </li>
+            <li><strong>Fotos e documentos:</strong> o app aceita imagens (fotos da obra, notas fiscais e orçamentos).
+            </li>
+          </ul>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">8</span>
+            <h2>O que fica fora do MVP</h2>
+          </div>
+          <div class="scope">
+            <ul class="out">
+              <li><strong>Não é um ERP</strong> de obras, nem software completo de orçamento/planejamento.</li>
+              <li><strong>Sem pagamento dentro do app</strong>  o pagamento é feito por fora (o app não movimenta
+                dinheiro).</li>
+              <li><strong>Sem armazenamento de dados bancários nem dados de pagamento.</strong> O app guarda dados
+                pessoais e valores, mas não guarda contas bancárias nem chaves PIX. O pagamento é combinado
+                <strong>diretamente com o arquiteto, por fora do app</strong>.
+              </li>
+              <li><strong>Sem upload de vídeos</strong> nesta versão (apenas imagens).</li>
+              <li><strong>Sem ações do cliente</strong> dentro do sistema (ele apenas acompanha).</li>
+              <li><strong>Sem planos e cobrança</strong> nesta versão  a validação é feita com um único
+                cliente.
+                Planos e a integração de pagamento virão numa fase seguinte.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="block">
+          <div class="sec-head"><span class="sec-num">9</span>
+            <h2>Pontos em aberto  precisam de vocês</h2>
+          </div>
+          <div class="open">
+
+            <div class="q">
+              <p class="qn">Revisão geral</p>
+              <h3>Falta algo?</h3>
+              <p style="margin-bottom:0">Ao ler os módulos e as regras acima, há alguma <strong>funcionalidade,
+                  informação ou situação do dia a dia de vocês</strong> que não está contemplada?</p>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <footer>
+      <div class="wrap">
+        <div class="foot-inner">
+          <div class="foot-mark">Organiza Minha Obra<span class="thin">Documento de requisitos · MVP · v1</span></div>
+          <div class="foot-contact">
+            Dúvidas sobre o produto?<br>
+            <a href="mailto:contato@organizaminhaobra.com">contato@organizaminhaobra.com</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+</body>
+
+</html>
