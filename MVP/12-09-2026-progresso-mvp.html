@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mapa de Progresso — MVP OMO</title>
+<style>
+  :root {
+    color-scheme: light;
+    --color-bg: #f7f3ea;
+    --color-surface: #ffffff;
+    --color-sidebar: #1b1f19;
+    --color-sidebar-foreground: #f7f3ea;
+    --color-text-primary: #1b1f19;
+    --color-text-secondary: #6b6558;
+    --color-text-muted: #8f8a7c;
+    --color-border: #e4ddcb;
+    --color-primary: #3f5b32;
+    --color-primary-hover: #324a28;
+    --color-primary-foreground: #ffffff;
+    --color-status-good: #0ca30c;
+    --color-status-warning: #fab219;
+    --color-status-serious: #ec835a;
+    --color-status-critical: #d03b3b;
+    --font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --radius-sm: 8px;
+    --radius-lg: 12px;
+    --shadow-overlay: 0 4px 16px rgba(27, 31, 25, 0.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --color-bg: #14170f;
+      --color-surface: #1b1f19;
+      --color-sidebar: #1b1f19;
+      --color-sidebar-foreground: #f7f3ea;
+      --color-text-primary: #f7f3ea;
+      --color-text-secondary: #b8b2a4;
+      --color-text-muted: #8f8a7c;
+      --color-border: #ffffff1a;
+      --color-primary: #7fa363;
+      --color-primary-hover: #93b579;
+      --color-primary-foreground: #1b1f19;
+      --shadow-overlay: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-bg: #14170f;
+    --color-surface: #1b1f19;
+    --color-sidebar: #1b1f19;
+    --color-sidebar-foreground: #f7f3ea;
+    --color-text-primary: #f7f3ea;
+    --color-text-secondary: #b8b2a4;
+    --color-text-muted: #8f8a7c;
+    --color-border: #ffffff1a;
+    --color-primary: #7fa363;
+    --color-primary-hover: #93b579;
+    --color-primary-foreground: #1b1f19;
+    --shadow-overlay: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font-family);
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    padding: 24px 20px 64px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+
+  /* ---------- header ---------- */
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+  h1 { font-size: 26px; font-weight: 700; margin: 0 0 4px; }
+  .subtitle { color: var(--color-text-secondary); font-size: 13.5px; margin: 0; }
+  .theme-toggle {
+    flex-shrink: 0; width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--color-border);
+    background: var(--color-surface); color: var(--color-text-secondary); cursor: pointer; display: flex;
+    align-items: center; justify-content: center; font-size: 16px;
+  }
+  .theme-toggle:hover { color: var(--color-text-primary); }
+
+  /* ---------- legend ---------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 22px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--color-text-secondary); }
+  .dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .dot--done { background: var(--color-status-good); }
+  .dot--partial { background: var(--color-primary); }
+  .dot--none { background: var(--color-border); border: 1px solid var(--color-text-muted); }
+  .dot--cross { background: var(--color-status-warning); }
+
+  /* ---------- dashboard cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+  @media (max-width: 700px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  .card {
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+    padding: 14px 16px;
+  }
+  .card .big { font-size: 26px; font-weight: 700; line-height: 1.1; }
+  .card .label { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+  .card.accent .big { color: var(--color-primary); }
+
+  /* ---------- search + tabs ---------- */
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .search {
+    flex: 1 1 220px; min-width: 180px; padding: 9px 12px; border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text-primary);
+    font-size: 14px; font-family: inherit;
+  }
+  .search:focus { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+  .tabs { display: flex; gap: 6px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 999px; padding: 3px; }
+  .tab-btn {
+    border: none; background: transparent; padding: 7px 16px; border-radius: 999px; font-size: 13.5px;
+    font-weight: 600; color: var(--color-text-secondary); cursor: pointer; font-family: inherit;
+  }
+  .tab-btn.active { background: var(--color-primary); color: var(--color-primary-foreground); }
+
+  section.view { display: none; }
+  section.view.active { display: block; }
+
+  /* ---------- gantt ---------- */
+  .epic {
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+    margin-bottom: 10px; overflow: hidden;
+  }
+  .epic-head {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; user-select: none;
+  }
+  .epic-head:hover { background: color-mix(in srgb, var(--color-primary) 6%, transparent); }
+  .chevron { transition: transform 0.15s ease; color: var(--color-text-muted); font-size: 12px; width: 12px; flex-shrink: 0; }
+  .epic.open .chevron { transform: rotate(90deg); }
+  .epic-name { font-weight: 600; font-size: 14.5px; flex: 0 0 auto; min-width: 190px; }
+  .epic-bar-track { flex: 1 1 auto; height: 10px; background: var(--color-border); border-radius: 999px; overflow: hidden; min-width: 80px; }
+  .epic-bar-fill { height: 100%; border-radius: 999px; }
+  .epic-bar-fill.done { background: var(--color-status-good); }
+  .epic-bar-fill.partial { background: var(--color-primary); }
+  .epic-bar-fill.cross { background: repeating-linear-gradient(45deg, var(--color-status-warning), var(--color-status-warning) 5px, transparent 5px, transparent 10px); }
+  .epic-count { font-size: 12.5px; color: var(--color-text-secondary); flex-shrink: 0; width: 108px; text-align: right; }
+  .epic-pct { font-size: 12.5px; font-weight: 700; flex-shrink: 0; width: 42px; text-align: right; }
+
+  .epic-body { display: none; padding: 4px 14px 12px 38px; border-top: 1px solid var(--color-border); }
+  .epic.open .epic-body { display: block; }
+  .epic-note { font-size: 12.5px; color: var(--color-text-secondary); margin: 8px 0 10px; padding: 8px 10px; background: var(--color-bg); border-radius: var(--radius-sm); border: 1px dashed var(--color-border); }
+
+  .story-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--color-border); }
+  .story-row:last-child { border-bottom: none; }
+  .story-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .story-status.done { background: var(--color-status-good); }
+  .story-status.partial { background: var(--color-primary); }
+  .story-status.none { background: var(--color-border); border: 1px solid var(--color-text-muted); }
+  .story-name { font-size: 13.5px; flex: 1 1 auto; min-width: 160px; }
+  .story-note { font-size: 12px; color: var(--color-text-secondary); flex-basis: 100%; margin: -2px 0 6px 19px; }
+  .story-count { font-size: 12px; color: var(--color-text-secondary); flex-shrink: 0; width: 52px; text-align: right; }
+
+  /* ---------- mind map ---------- */
+  .mindmap { display: flex; flex-direction: column; gap: 10px; }
+  .mm-epic {
+    background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  }
+  .mm-epic-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; user-select: none; }
+  .mm-epic-head:hover { background: color-mix(in srgb, var(--color-primary) 6%, transparent); }
+  .mm-badge { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 2px 8px; border-radius: 999px; flex-shrink: 0; }
+  .mm-badge.done { background: color-mix(in srgb, var(--color-status-good) 18%, transparent); color: var(--color-status-good); }
+  .mm-badge.partial { background: color-mix(in srgb, var(--color-primary) 18%, transparent); color: var(--color-primary); }
+  .mm-badge.none { background: var(--color-bg); color: var(--color-text-muted); border: 1px solid var(--color-border); }
+  .mm-badge.cross { background: color-mix(in srgb, var(--color-status-warning) 22%, transparent); color: #8a6100; }
+  .mm-epic-title { font-weight: 600; font-size: 14.5px; flex: 1 1 auto; }
+  .mm-tree { display: none; padding: 4px 16px 14px 20px; border-top: 1px solid var(--color-border); }
+  .mm-epic.open .mm-tree { display: block; }
+  .mm-node { position: relative; padding: 10px 0 10px 26px; border-left: 2px solid var(--color-border); margin-left: 6px; }
+  .mm-node:last-child { border-left-color: transparent; }
+  .mm-node::before {
+    content: ""; position: absolute; left: -2px; top: 18px; width: 20px; height: 2px; background: var(--color-border);
+  }
+  .mm-node-title { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .mm-node-note { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; line-height: 1.4; }
+
+  /* ---------- callouts ---------- */
+  .callout {
+    background: var(--color-surface); border: 1px solid var(--color-border); border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-sm); padding: 14px 16px; margin-top: 22px; font-size: 13.5px; line-height: 1.55;
+  }
+  .callout h3 { margin: 0 0 6px; font-size: 14.5px; }
+  .callout.warn { border-left-color: var(--color-status-warning); }
+  footer { margin-top: 28px; font-size: 11.5px; color: var(--color-text-muted); text-align: center; }
+
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Mapa de Progresso — MVP OMO</h1>
+      <p class="subtitle">Gerado em 11/09/2026 a partir de <code>docs-sdd/07-tarefas.md</code> (branch <code>dev</code>, após o merge do PR #40). Peça pra regenerar sempre que quiser um retrato atualizado.</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">🌙</button>
+  </header>
+
+  <div class="legend">
+    <span class="legend-item"><span class="dot dot--done"></span> Concluído</span>
+    <span class="legend-item"><span class="dot dot--partial"></span> Em andamento</span>
+    <span class="legend-item"><span class="dot dot--none"></span> Não iniciado</span>
+    <span class="legend-item"><span class="dot dot--cross"></span> Transversal (validado dentro de outras stories)</span>
+  </div>
+
+  <div class="cards">
+    <div class="card accent"><div class="big">56%</div><div class="label">tarefas concluídas (84 de 149)</div></div>
+    <div class="card"><div class="big">1 / 13</div><div class="label">épicos 100% concluídos</div></div>
+    <div class="card"><div class="big">5</div><div class="label">épicos em andamento</div></div>
+    <div class="card"><div class="big">ST-06.1</div><div class="label">próxima story a executar</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input class="search" id="search" type="text" placeholder="Filtrar por épico, story ou palavra-chave (ex: fornecedor, ST-03, Playwright)..." />
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="gantt">Gráfico (Gantt)</button>
+      <button class="tab-btn" data-tab="mindmap">Mapa mental</button>
+    </div>
+  </div>
+
+  <section class="view active" id="view-gantt"></section>
+  <section class="view" id="view-mindmap"></section>
+
+  <div class="callout" id="nextStepCallout">
+    <h3>🎯 Próximo passo sugerido</h3>
+    <p><strong>ST-06.1 — Lançamentos da semana</strong> (<code>EP-06 Ciclo financeiro semanal</code>), primeira story ainda não iniciada na ordem de dependência do roadmap. <code>ST-05.1</code> (Fornecedores) não bloqueia nada: as duas pendências que restam nela são teste automatizado (escopo de QA) e uma melhoria futura adiada deliberadamente.</p>
+  </div>
+
+  <div class="callout warn">
+    <h3>⚠️ Duas notas de leitura</h3>
+    <p><strong>EP-10 (Segurança transversal &amp; LGPD)</strong> aparece com 0% porque não é um épico sequencial — cada regra <code>SEC-XX</code> é validada <em>dentro</em> das stories dos épicos que tocam a rota correspondente (ex. SEC-06 já revisado em <code>ST-05.1</code>). O 0% aqui é sobre um checklist central, não sobre segurança de fato implementada.</p>
+    <p><strong>EP-12 (débito técnico de Sidebar/Cronograma)</strong> tem o PR #26 já mergeado (confirmado no histórico do GitHub), mas o checklist em <code>07-tarefas.md</code> não está marcado — provável lag de documentação a revisar.</p>
+  </div>
+
+  <footer>Documento estático — não se atualiza sozinho conforme PRs são mergeados. Peça uma nova versão quando quiser.</footer>
+</div>
+
+<script>
+const DATA = [
+  { id: "EP-00", name: "Fundação técnica", status: "partial", done: 25, total: 26,
+    stories: [
+      { id: "ST-00.1", name: "Scaffolding do backend (Spring Boot + PostgreSQL)", status: "done", done: 4, total: 4 },
+      { id: "ST-00.2", name: "Multi-tenancy (schema-per-tenant)", status: "done", done: 5, total: 5 },
+      { id: "ST-00.3", name: "Arquitetura em camadas e contrato de erro", status: "done", done: 3, total: 3 },
+      { id: "ST-00.4", name: "Scaffolding do frontend (React + Vite + PWA)", status: "done", done: 6, total: 6 },
+      { id: "ST-00.5", name: "CI/CD e provisionamento inicial", status: "partial", done: 5, total: 6,
+        note: "TA-00.5.3 (deploy manual no VPS Hostgator) pendente — mitigado por um ambiente de preview em Cloudflare Workers + Render, já validado em produção." },
+      { id: "ST-00.6", name: "Padronização de idioma nas rotas do frontend", status: "done", done: 2, total: 2 },
+    ] },
+  { id: "EP-01", name: "Autenticação, onboarding e recuperação de senha", status: "done", done: 29, total: 29,
+    stories: [
+      { id: "ST-01.1", name: "Login e sessão", status: "done", done: 6, total: 6 },
+      { id: "ST-01.2", name: "Landing page e cadastro do escritório", status: "done", done: 9, total: 9 },
+      { id: "ST-01.3", name: "Recuperação de senha", status: "done", done: 7, total: 7 },
+      { id: "ST-01.4", name: "Primeiro acesso do cliente", status: "done", done: 4, total: 4 },
+      { id: "ST-01.5", name: "Configurações da conta e push opt-in", status: "done", done: 3, total: 3,
+        note: "Todas as tarefas concluídas — o título desta story no doc não tem o ✅, aparenta só um esquecimento de marcação." },
+    ] },
+  { id: "EP-02", name: "Gestão de Obras e Clientes", status: "partial", done: 16, total: 17,
+    stories: [
+      { id: "ST-02.1", name: "Criar e listar Obras", status: "done", done: 4, total: 4 },
+      { id: "ST-02.2", name: "Editar Obra e ciclo de vida", status: "partial", done: 4, total: 5,
+        note: "TA-02.2.5 (testes Playwright de edição de obra) pendente — fora do escopo desta rodada por decisão explícita do usuário." },
+      { id: "ST-02.3", name: "Cadastrar e editar Clientes", status: "done", done: 4, total: 4 },
+      { id: "ST-02.4", name: "Reenvio de convite ao cliente", status: "done", done: 4, total: 4 },
+    ] },
+  { id: "EP-03", name: "Cronograma (Gantt)", status: "partial", done: 6, total: 8,
+    stories: [
+      { id: "ST-03.1", name: "Arquiteto cria e edita etapas", status: "partial", done: 5, total: 6,
+        note: "TA-03.1.6 (Playwright) pendente — escopo de QA, não entra na execução automática de story." },
+      { id: "ST-03.2", name: "Cliente visualiza cronograma", status: "partial", done: 1, total: 2,
+        note: "TA-03.2.2 (Playwright) pendente — mesmo motivo, excluído deliberadamente da execução automática." },
+    ] },
+  { id: "EP-04", name: "Feed da Obra", status: "partial", done: 6, total: 8,
+    stories: [
+      { id: "ST-04.1", name: "Arquiteto publica, edita e exclui", status: "partial", done: 5, total: 6,
+        note: "TA-04.1.6 (Playwright) pendente — escopo de QA." },
+      { id: "ST-04.2", name: "Cliente visualiza", status: "partial", done: 1, total: 2,
+        note: "TA-04.2.2 (Playwright) pendente — escopo de QA." },
+    ] },
+  { id: "EP-05", name: "Fornecedores", status: "partial", done: 2, total: 4,
+    stories: [
+      { id: "ST-05.1", name: "CRUD de Fornecedores (PF/PJ, sem dado de pagamento)", status: "partial", done: 2, total: 4,
+        note: "Núcleo já mergeado (PR #40). Pendências: TA-05.1.3 (Playwright, QA) e TA-05.1.4 (endereço estruturado com CEP — melhoria futura, adiada deliberadamente pelo usuário)." },
+    ] },
+  { id: "EP-06", name: "Ciclo financeiro semanal", status: "none", done: 0, total: 13,
+    stories: [
+      { id: "ST-06.1", name: "Lançamentos da semana", status: "none", done: 0, total: 5, note: "Próxima story a executar." },
+      { id: "ST-06.2", name: "Fechamento semanal automático", status: "none", done: 0, total: 4 },
+      { id: "ST-06.3", name: "Pendências", status: "none", done: 0, total: 4 },
+    ] },
+  { id: "EP-07", name: "Orçamentos da Obra & Relatório PDF", status: "none", done: 0, total: 7,
+    stories: [
+      { id: "ST-07.1", name: "Orçamentos da Obra", status: "none", done: 0, total: 4 },
+      { id: "ST-07.2", name: "Relatório em PDF", status: "none", done: 0, total: 3 },
+    ] },
+  { id: "EP-08", name: "Notificações (in-app + push)", status: "none", done: 0, total: 8,
+    stories: [
+      { id: "ST-08.1", name: "Central de notificações in-app", status: "none", done: 0, total: 5 },
+      { id: "ST-08.2", name: "Push via Web Push API", status: "none", done: 0, total: 3 },
+    ] },
+  { id: "EP-09", name: "Painel administrativo da plataforma", status: "none", done: 0, total: 13,
+    stories: [
+      { id: "ST-09.1", name: "Autenticação e telas do admin", status: "none", done: 0, total: 4 },
+      { id: "ST-09.2", name: "Ativar/suspender e mudar plano", status: "none", done: 0, total: 3 },
+      { id: "ST-09.3", name: "Auditoria admin", status: "none", done: 0, total: 3 },
+      { id: "ST-09.4", name: "Job de agregação de uso", status: "none", done: 0, total: 1 },
+      { id: "ST-09.5", name: "Tela de conta suspensa do arquiteto", status: "none", done: 0, total: 2 },
+    ] },
+  { id: "EP-10", name: "Segurança transversal & LGPD baseline", status: "cross", done: 0, total: 7,
+    stories: [
+      { id: "TA-10.1–10.7", name: "Checklist central (isolamento de tenant, autorização, validação, headers, LGPD...)", status: "cross",
+        note: "Não é trabalho isolado: cada regra é validada dentro da story do épico que toca a rota correspondente. O 0% é só o checklist central, não segurança real ausente." },
+    ] },
+  { id: "EP-11", name: "Qualidade, observabilidade & deploy", status: "none", done: 0, total: 11,
+    stories: [
+      { id: "ST-11.1", name: "Testabilidade", status: "none", done: 0, total: 4 },
+      { id: "ST-11.2", name: "Observabilidade", status: "none", done: 0, total: 4 },
+      { id: "ST-11.3", name: "Deploy e lançamento", status: "none", done: 0, total: 3 },
+    ] },
+  { id: "EP-12", name: "Débito técnico: Sidebar e Cronograma 🔧", status: "none", done: 0, total: 5,
+    stories: [
+      { id: "ST-12.1", name: "Refinamentos de UX do Cronograma e da Sidebar", status: "none", done: 0, total: 5,
+        note: "PR #26 já mergeado — checklist deste doc aparenta não ter sido atualizado depois do merge. Vale conferir e marcar." },
+    ] },
+];
+
+const STATUS_LABEL = { done: "Concluído", partial: "Em andamento", none: "Não iniciado", cross: "Transversal" };
+
+function pct(done, total) { return total === 0 ? 0 : Math.round((done / total) * 100); }
+
+function renderGantt() {
+  const root = document.getElementById("view-gantt");
+  root.innerHTML = DATA.map(epic => {
+    const p = pct(epic.done, epic.total);
+    const fillClass = epic.status === "cross" ? "cross" : (epic.status === "done" ? "done" : "partial");
+    const storiesHtml = epic.stories.map(s => {
+      const noteHtml = s.note ? `<div class="story-note">${s.note}</div>` : "";
+      const countHtml = s.status === "cross" ? "" : `<span class="story-count">${s.done}/${s.total}</span>`;
+      return `<div class="story-row" data-search="${(s.id + ' ' + s.name + ' ' + (s.note||'')).toLowerCase()}">
+        <span class="story-status ${s.status === 'cross' ? 'partial' : s.status}"></span>
+        <span class="story-name"><strong>${s.id}</strong> — ${s.name}</span>
+        ${countHtml}
+      </div>${noteHtml}`;
+    }).join("");
+    return `<div class="epic" data-search="${(epic.id + ' ' + epic.name + ' ' + epic.stories.map(s=>s.id+' '+s.name+' '+(s.note||'')).join(' ')).toLowerCase()}">
+      <div class="epic-head" onclick="this.parentElement.classList.toggle('open')">
+        <span class="chevron">▶</span>
+        <span class="epic-name">${epic.id} — ${epic.name}</span>
+        <span class="epic-bar-track"><span class="epic-bar-fill ${fillClass}" style="width:${epic.status === 'cross' ? 100 : p}%"></span></span>
+        <span class="epic-count">${epic.status === 'cross' ? 'validado à parte' : epic.done + '/' + epic.total + ' tarefas'}</span>
+        <span class="epic-pct">${epic.status === 'cross' ? '—' : p + '%'}</span>
+      </div>
+      <div class="epic-body">${storiesHtml}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderMindmap() {
+  const root = document.getElementById("view-mindmap");
+  root.innerHTML = `<div class="mindmap">` + DATA.map(epic => {
+    const nodesHtml = epic.stories.map(s => {
+      const noteHtml = s.note ? `<div class="mm-node-note">${s.note}</div>` : "";
+      const countTxt = s.status === "cross" ? "" : ` · ${s.done}/${s.total}`;
+      return `<div class="mm-node">
+        <div class="mm-node-title"><span class="mm-badge ${s.status}">${STATUS_LABEL[s.status]}</span> ${s.id} — ${s.name}${countTxt}</div>
+        ${noteHtml}
+      </div>`;
+    }).join("");
+    return `<div class="mm-epic" data-search="${(epic.id + ' ' + epic.name + ' ' + epic.stories.map(s=>s.id+' '+s.name+' '+(s.note||'')).join(' ')).toLowerCase()}">
+      <div class="mm-epic-head" onclick="this.parentElement.classList.toggle('open')">
+        <span class="chevron">▶</span>
+        <span class="mm-badge ${epic.status}">${STATUS_LABEL[epic.status]}</span>
+        <span class="mm-epic-title">${epic.id} — ${epic.name}</span>
+        <span class="epic-count">${epic.status === 'cross' ? 'validado à parte' : epic.done + '/' + epic.total}</span>
+      </div>
+      <div class="mm-tree">${nodesHtml}</div>
+    </div>`;
+  }).join("") + `</div>`;
+}
+
+renderGantt();
+renderMindmap();
+
+// tabs
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("view-" + btn.dataset.tab).classList.add("active");
+  });
+});
+
+// search filter (funciona nos dois modos, expande o que casar)
+document.getElementById("search").addEventListener("input", (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("#view-gantt .epic, #view-mindmap .mm-epic").forEach(node => {
+    const match = !q || node.dataset.search.includes(q);
+    node.hidden = !match;
+    if (q && match) node.classList.add("open");
+  });
+});
+
+// theme toggle
+const themeBtn = document.getElementById("themeToggle");
+function applyTheme(theme) {
+  if (theme) { document.documentElement.setAttribute("data-theme", theme); }
+  else { document.documentElement.removeAttribute("data-theme"); }
+  themeBtn.textContent = (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) ? "☀️" : "🌙";
+}
+try {
+  const saved = localStorage.getItem("omo-mapa-theme");
+  applyTheme(saved);
+} catch (e) { applyTheme(null); }
+themeBtn.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  applyTheme(next);
+  try { localStorage.setItem("omo-mapa-theme", next); } catch (e) {}
+});
+</script>
+</body>
+</html>
