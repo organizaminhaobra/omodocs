@@ -194,7 +194,7 @@
   <header>
     <div>
       <h1>Mapa de Progresso — MVP OMO</h1>
-      <p class="subtitle">Gerado em 11/09/2026 a partir de <code>docs-sdd/07-tarefas.md</code> (branch <code>dev</code>, após o merge do PR #40). Peça pra regenerar sempre que quiser um retrato atualizado.</p>
+      <p class="subtitle">Gerado em 23/09/2026 a partir de <code>docs-sdd/07-tarefas.md</code> (branch <code>dev</code>), sincronizado com o board do ClickUp na mesma rodada. Peça pra regenerar sempre que quiser um retrato atualizado.</p>
     </div>
     <button class="theme-toggle" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">🌙</button>
   </header>
@@ -207,10 +207,10 @@
   </div>
 
   <div class="cards">
-    <div class="card accent"><div class="big">56%</div><div class="label">tarefas concluídas (84 de 149)</div></div>
-    <div class="card"><div class="big">1 / 13</div><div class="label">épicos 100% concluídos</div></div>
-    <div class="card"><div class="big">5</div><div class="label">épicos em andamento</div></div>
-    <div class="card"><div class="big">ST-06.1</div><div class="label">próxima story a executar</div></div>
+    <div class="card accent"><div class="big">65%</div><div class="label">tarefas concluídas (115 de 178)</div></div>
+    <div class="card"><div class="big">4 / 13</div><div class="label">épicos 100% concluídos</div></div>
+    <div class="card"><div class="big">4</div><div class="label">épicos em andamento</div></div>
+    <div class="card"><div class="big">ST-07.1</div><div class="label">próxima story a executar</div></div>
   </div>
 
   <div class="toolbar">
@@ -226,13 +226,12 @@
 
   <div class="callout" id="nextStepCallout">
     <h3>🎯 Próximo passo sugerido</h3>
-    <p><strong>ST-06.1 — Lançamentos da semana</strong> (<code>EP-06 Ciclo financeiro semanal</code>), primeira story ainda não iniciada na ordem de dependência do roadmap. <code>ST-05.1</code> (Fornecedores) não bloqueia nada: as duas pendências que restam nela são teste automatizado (escopo de QA) e uma melhoria futura adiada deliberadamente.</p>
+    <p><strong>ST-07.1 — Geração de Fatura ao decidir sobre Orçamento</strong> (<code>EP-07 Faturamento &amp; Relatório Semanal</code>), primeira story ainda não iniciada na ordem de dependência do roadmap. <code>EP-06 Orçamentos &amp; Aprovação do Cliente</code> foi concluído nesta rodada (19/19) — <code>EP-07</code> reaproveita a decisão do cliente (<code>quote_decision_log</code>) já implementada lá para gerar as faturas.</p>
   </div>
 
   <div class="callout warn">
-    <h3>⚠️ Duas notas de leitura</h3>
+    <h3>⚠️ Nota de leitura</h3>
     <p><strong>EP-10 (Segurança transversal &amp; LGPD)</strong> aparece com 0% porque não é um épico sequencial — cada regra <code>SEC-XX</code> é validada <em>dentro</em> das stories dos épicos que tocam a rota correspondente (ex. SEC-06 já revisado em <code>ST-05.1</code>). O 0% aqui é sobre um checklist central, não sobre segurança de fato implementada.</p>
-    <p><strong>EP-12 (débito técnico de Sidebar/Cronograma)</strong> tem o PR #26 já mergeado (confirmado no histórico do GitHub), mas o checklist em <code>07-tarefas.md</code> não está marcado — provável lag de documentação a revisar.</p>
   </div>
 
   <footer>Documento estático — não se atualiza sozinho conforme PRs são mergeados. Peça uma nova versão quando quiser.</footer>
@@ -256,8 +255,7 @@ const DATA = [
       { id: "ST-01.2", name: "Landing page e cadastro do escritório", status: "done", done: 9, total: 9 },
       { id: "ST-01.3", name: "Recuperação de senha", status: "done", done: 7, total: 7 },
       { id: "ST-01.4", name: "Primeiro acesso do cliente", status: "done", done: 4, total: 4 },
-      { id: "ST-01.5", name: "Configurações da conta e push opt-in", status: "done", done: 3, total: 3,
-        note: "Todas as tarefas concluídas — o título desta story no doc não tem o ✅, aparenta só um esquecimento de marcação." },
+      { id: "ST-01.5", name: "Configurações da conta e push opt-in", status: "done", done: 3, total: 3 },
     ] },
   { id: "EP-02", name: "Gestão de Obras e Clientes", status: "partial", done: 16, total: 17,
     stories: [
@@ -274,28 +272,30 @@ const DATA = [
       { id: "ST-03.2", name: "Cliente visualiza cronograma", status: "partial", done: 1, total: 2,
         note: "TA-03.2.2 (Playwright) pendente — mesmo motivo, excluído deliberadamente da execução automática." },
     ] },
-  { id: "EP-04", name: "Feed da Obra", status: "partial", done: 6, total: 8,
+  { id: "EP-04", name: "Feed da Obra", status: "done", done: 8, total: 8,
     stories: [
-      { id: "ST-04.1", name: "Arquiteto publica, edita e exclui", status: "partial", done: 5, total: 6,
-        note: "TA-04.1.6 (Playwright) pendente — escopo de QA." },
-      { id: "ST-04.2", name: "Cliente visualiza", status: "partial", done: 1, total: 2,
-        note: "TA-04.2.2 (Playwright) pendente — escopo de QA." },
+      { id: "ST-04.1", name: "Arquiteto publica, edita e exclui", status: "done", done: 6, total: 6 },
+      { id: "ST-04.2", name: "Cliente visualiza", status: "done", done: 2, total: 2 },
     ] },
-  { id: "EP-05", name: "Fornecedores", status: "partial", done: 2, total: 4,
+  { id: "EP-05", name: "Fornecedores", status: "done", done: 7, total: 7,
     stories: [
-      { id: "ST-05.1", name: "CRUD de Fornecedores (PF/PJ, sem dado de pagamento)", status: "partial", done: 2, total: 4,
-        note: "Núcleo já mergeado (PR #40). Pendências: TA-05.1.3 (Playwright, QA) e TA-05.1.4 (endereço estruturado com CEP — melhoria futura, adiada deliberadamente pelo usuário)." },
+      { id: "ST-05.1", name: "CRUD de Fornecedores (PF/PJ, sem dado de pagamento, endereço estruturado via CEP)", status: "done", done: 4, total: 4 },
+      { id: "ST-05.2", name: "Condição de pagamento (à vista/parcelado, modo aceito)", status: "done", done: 3, total: 3 },
     ] },
-  { id: "EP-06", name: "Ciclo financeiro semanal", status: "none", done: 0, total: 13,
+  { id: "EP-06", name: "Orçamentos & Aprovação do Cliente", status: "done", done: 19, total: 19,
     stories: [
-      { id: "ST-06.1", name: "Lançamentos da semana", status: "none", done: 0, total: 5, note: "Próxima story a executar." },
-      { id: "ST-06.2", name: "Fechamento semanal automático", status: "none", done: 0, total: 4 },
-      { id: "ST-06.3", name: "Pendências", status: "none", done: 0, total: 4 },
+      { id: "ST-06.1", name: "Criação e publicação de Orçamentos (1..N Fornecedores participantes)", status: "done", done: 6, total: 6 },
+      { id: "ST-06.2", name: "Card de Orçamento no Feed (arquiteto e cliente, decisão direto no card)", status: "done", done: 4, total: 4 },
+      { id: "ST-06.3", name: "Aprovação do Cliente (TL-C08, Escolher/Recusar)", status: "done", done: 5, total: 5 },
+      { id: "ST-06.4", name: "Card de Orçamento no Resumo (previsto x executado, cor por severidade)", status: "done", done: 4, total: 4 },
     ] },
-  { id: "EP-07", name: "Orçamentos da Obra & Relatório PDF", status: "none", done: 0, total: 7,
+  { id: "EP-07", name: "Faturamento & Relatório Semanal", status: "none", done: 0, total: 19,
     stories: [
-      { id: "ST-07.1", name: "Orçamentos da Obra", status: "none", done: 0, total: 4 },
-      { id: "ST-07.2", name: "Relatório em PDF", status: "none", done: 0, total: 3 },
+      { id: "ST-07.1", name: "Geração de Fatura ao decidir sobre Orçamento", status: "none", done: 0, total: 3, note: "Próxima story a executar." },
+      { id: "ST-07.2", name: "Aba Faturamento (TL-A09/TL-C06)", status: "none", done: 0, total: 3 },
+      { id: "ST-07.3", name: "Relatório Semanal automático (job + notificação)", status: "none", done: 0, total: 6 },
+      { id: "ST-07.4", name: "Configuração e Orçamento previsto", status: "none", done: 0, total: 4 },
+      { id: "ST-07.5", name: "Relatório em PDF", status: "none", done: 0, total: 3 },
     ] },
   { id: "EP-08", name: "Notificações (in-app + push)", status: "none", done: 0, total: 8,
     stories: [
@@ -321,10 +321,10 @@ const DATA = [
       { id: "ST-11.2", name: "Observabilidade", status: "none", done: 0, total: 4 },
       { id: "ST-11.3", name: "Deploy e lançamento", status: "none", done: 0, total: 3 },
     ] },
-  { id: "EP-12", name: "Débito técnico: Sidebar e Cronograma 🔧", status: "none", done: 0, total: 5,
+  { id: "EP-12", name: "Débito técnico: Sidebar e Cronograma", status: "partial", done: 5, total: 6,
     stories: [
-      { id: "ST-12.1", name: "Refinamentos de UX do Cronograma e da Sidebar", status: "none", done: 0, total: 5,
-        note: "PR #26 já mergeado — checklist deste doc aparenta não ter sido atualizado depois do merge. Vale conferir e marcar." },
+      { id: "ST-12.1", name: "Refinamentos de UX do Cronograma e da Sidebar", status: "partial", done: 5, total: 6,
+        note: "TA-12.1.6 (Playwright) pendente — escopo de QA. As 4 tarefas funcionais + o logo (TA-12.1.5) já estavam implementadas; o checklist só não tinha sido atualizado (achado ao cruzar com o board do ClickUp, 23/09)." },
     ] },
 ];
 
