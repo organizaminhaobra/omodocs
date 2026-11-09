@@ -194,7 +194,7 @@
   <header>
     <div>
       <h1>Mapa de Progresso — MVP OMO</h1>
-      <p class="subtitle">Gerado em 23/09/2026 a partir de <code>docs-sdd/07-tarefas.md</code> (branch <code>dev</code>), sincronizado com o board do ClickUp na mesma rodada. Peça pra regenerar sempre que quiser um retrato atualizado.</p>
+      <p class="subtitle">Atualizado em 08/11/2026 a partir de <code>docs-sdd/07-tarefas.md</code> v3.00 (branch <code>dev</code>), com o board do ClickUp (lista <em>MVP OMO</em>) alinhado na mesma rodada. A partir desta data o ClickUp é a fonte das tarefas; o doc fica como histórico.</p>
     </div>
     <button class="theme-toggle" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">🌙</button>
   </header>
@@ -207,10 +207,10 @@
   </div>
 
   <div class="cards">
-    <div class="card accent"><div class="big">65%</div><div class="label">tarefas concluídas (115 de 178)</div></div>
-    <div class="card"><div class="big">4 / 13</div><div class="label">épicos 100% concluídos</div></div>
-    <div class="card"><div class="big">4</div><div class="label">épicos em andamento</div></div>
-    <div class="card"><div class="big">ST-07.1</div><div class="label">próxima story a executar</div></div>
+    <div class="card accent"><div class="big">81%</div><div class="label">tarefas concluídas (252 de 310)</div></div>
+    <div class="card"><div class="big">9 / 15</div><div class="label">épicos concluídos (testes de QA à parte)</div></div>
+    <div class="card"><div class="big">5</div><div class="label">épicos em andamento</div></div>
+    <div class="card"><div class="big">58</div><div class="label">tarefas pendentes (30 são testes/QA)</div></div>
   </div>
 
   <div class="toolbar">
@@ -225,8 +225,21 @@
   <section class="view" id="view-mindmap"></section>
 
   <div class="callout" id="nextStepCallout">
-    <h3>🎯 Próximo passo sugerido</h3>
-    <p><strong>ST-07.1 — Geração de Fatura ao decidir sobre Orçamento</strong> (<code>EP-07 Faturamento &amp; Relatório Semanal</code>), primeira story ainda não iniciada na ordem de dependência do roadmap. <code>EP-06 Orçamentos &amp; Aprovação do Cliente</code> foi concluído nesta rodada (19/19) — <code>EP-07</code> reaproveita a decisão do cliente (<code>quote_decision_log</code>) já implementada lá para gerar as faturas.</p>
+    <h3>🎯 O que falta além dos testes de QA</h3>
+    <p>Das 58 tarefas pendentes, 30 são testes automatizados (Playwright e as stories <code>ST-13.2</code>/<code>ST-14.2</code>), tratados como backlog de QA e fora do rollup das stories. As 28 restantes:</p>
+    <ul>
+      <li><strong>EP-09 / ST-09.6</strong> — indicadores gerenciais do painel admin (backlog, nenhuma iniciada).</li>
+      <li><strong>EP-10</strong> — checklist central de segurança e LGPD (<code>TA-10.1</code> a <code>TA-10.7</code>).</li>
+      <li><strong>EP-11</strong> — testabilidade, observabilidade e deploy (9 tarefas).</li>
+      <li><strong>ST-07.1b</strong> — <code>TA-07.1b.5</code>, testes de integração de NF, Fatura e entrega.</li>
+      <li><strong>ST-13.1</strong> — <code>TA-13.1.5</code>, home do cliente (falta o frame no protótipo).</li>
+      <li><strong>ST-14.1</strong> — <code>TA-14.1.11</code>, Cronograma: doc diz parcial, board diz concluída. A confirmar.</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <h3>🔁 Mudança de processo</h3>
+    <p>O board do ClickUp passa a ser a fonte das tarefas. Itens novos (Épico, Story, Task, Bug, Vulnerabilidade) nascem lá com título <code>OMO-NNNN</code>, pela skill <code>new-task</code>. Os IDs antigos (<code>EP-XX</code>, <code>ST-XX.Y</code>, <code>TA-XX.Y.Z</code>) continuam valendo como histórico.</p>
   </div>
 
   <div class="callout warn">
@@ -234,20 +247,20 @@
     <p><strong>EP-10 (Segurança transversal &amp; LGPD)</strong> aparece com 0% porque não é um épico sequencial — cada regra <code>SEC-XX</code> é validada <em>dentro</em> das stories dos épicos que tocam a rota correspondente (ex. SEC-06 já revisado em <code>ST-05.1</code>). O 0% aqui é sobre um checklist central, não sobre segurança de fato implementada.</p>
   </div>
 
-  <footer>Documento estático — não se atualiza sozinho conforme PRs são mergeados. Peça uma nova versão quando quiser.</footer>
+  <footer>Documento estático (retrato de 08/11/2026) — não se atualiza sozinho. O estado vivo está no board do ClickUp.</footer>
 </div>
 
 <script>
 const DATA = [
-  { id: "EP-00", name: "Fundação técnica", status: "partial", done: 25, total: 26,
+  { id: "EP-00", name: "Fundação técnica", status: "done", done: 32, total: 32,
     stories: [
       { id: "ST-00.1", name: "Scaffolding do backend (Spring Boot + PostgreSQL)", status: "done", done: 4, total: 4 },
       { id: "ST-00.2", name: "Multi-tenancy (schema-per-tenant)", status: "done", done: 5, total: 5 },
       { id: "ST-00.3", name: "Arquitetura em camadas e contrato de erro", status: "done", done: 3, total: 3 },
       { id: "ST-00.4", name: "Scaffolding do frontend (React + Vite + PWA)", status: "done", done: 6, total: 6 },
-      { id: "ST-00.5", name: "CI/CD e provisionamento inicial", status: "partial", done: 5, total: 6,
-        note: "TA-00.5.3 (deploy manual no VPS Hostgator) pendente — mitigado por um ambiente de preview em Cloudflare Workers + Render, já validado em produção." },
-      { id: "ST-00.6", name: "Padronização de idioma nas rotas do frontend", status: "done", done: 2, total: 2 },
+      { id: "ST-00.5", name: "CI/CD e provisionamento inicial", status: "done", done: 6, total: 6 },
+      { id: "ST-00.6", name: "Padronização de idioma nas rotas do frontend (04 §9)", status: "done", done: 2, total: 2 },
+      { id: "ST-00.7", name: "Cabeçalho comum de página no AppShell", status: "done", done: 6, total: 6 },
     ] },
   { id: "EP-01", name: "Autenticação, onboarding e recuperação de senha", status: "done", done: 29, total: 29,
     stories: [
@@ -257,74 +270,109 @@ const DATA = [
       { id: "ST-01.4", name: "Primeiro acesso do cliente", status: "done", done: 4, total: 4 },
       { id: "ST-01.5", name: "Configurações da conta e push opt-in", status: "done", done: 3, total: 3 },
     ] },
-  { id: "EP-02", name: "Gestão de Obras e Clientes", status: "partial", done: 16, total: 17,
+  { id: "EP-02", name: "Gestão de Obras e Clientes", status: "done", done: 46, total: 49,
     stories: [
       { id: "ST-02.1", name: "Criar e listar Obras", status: "done", done: 4, total: 4 },
-      { id: "ST-02.2", name: "Editar Obra e ciclo de vida", status: "partial", done: 4, total: 5,
-        note: "TA-02.2.5 (testes Playwright de edição de obra) pendente — fora do escopo desta rodada por decisão explícita do usuário." },
+      { id: "ST-02.2", name: "Editar Obra e ciclo de vida", status: "done", done: 5, total: 5 },
       { id: "ST-02.3", name: "Cadastrar e editar Clientes", status: "done", done: 4, total: 4 },
       { id: "ST-02.4", name: "Reenvio de convite ao cliente", status: "done", done: 4, total: 4 },
+      { id: "ST-02.5", name: "Cliente vinculado a múltiplas obras (reversão de A-07)", status: "done", done: 4, total: 5,
+        note: "TA-02.5.5 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-02.6", name: "TL-A16 Clientes — listagem com busca e ordenação", status: "done", done: 6, total: 7,
+        note: "TA-02.6.4 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-02.7", name: "Paginação em Clientes e Fornecedores", status: "done", done: 3, total: 4,
+        note: "TA-02.7.4 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-02.8", name: "Layout sem scroll de página em Clientes e Fornecedores", status: "done", done: 3, total: 3 },
+      { id: "ST-02.9", name: "Correção: busca só por nome devolvia todo mundo (Clientes e Fornecedores)", status: "done", done: 4, total: 4 },
+      { id: "ST-02.10", name: "Ajustes de UI em Clientes e Fornecedores (colunas, linha, busca)", status: "done", done: 4, total: 4 },
+      { id: "ST-02.11", name: "Zero scroll, ações de convite na linha, endereço opcional de Fornecedor", status: "done", done: 5, total: 5 },
     ] },
-  { id: "EP-03", name: "Cronograma (Gantt)", status: "partial", done: 6, total: 8,
+  { id: "EP-03", name: "Cronograma (Gantt)", status: "done", done: 8, total: 8,
     stories: [
-      { id: "ST-03.1", name: "Arquiteto cria e edita etapas", status: "partial", done: 5, total: 6,
-        note: "TA-03.1.6 (Playwright) pendente — escopo de QA, não entra na execução automática de story." },
-      { id: "ST-03.2", name: "Cliente visualiza cronograma", status: "partial", done: 1, total: 2,
-        note: "TA-03.2.2 (Playwright) pendente — mesmo motivo, excluído deliberadamente da execução automática." },
+      { id: "ST-03.1", name: "Arquiteto cria e edita etapas", status: "done", done: 6, total: 6 },
+      { id: "ST-03.2", name: "Cliente visualiza cronograma", status: "done", done: 2, total: 2 },
     ] },
   { id: "EP-04", name: "Feed da Obra", status: "done", done: 8, total: 8,
     stories: [
       { id: "ST-04.1", name: "Arquiteto publica, edita e exclui", status: "done", done: 6, total: 6 },
       { id: "ST-04.2", name: "Cliente visualiza", status: "done", done: 2, total: 2 },
     ] },
-  { id: "EP-05", name: "Fornecedores", status: "done", done: 7, total: 7,
+  { id: "EP-05", name: "Fornecedores", status: "done", done: 13, total: 14,
     stories: [
-      { id: "ST-05.1", name: "CRUD de Fornecedores (PF/PJ, sem dado de pagamento, endereço estruturado via CEP)", status: "done", done: 4, total: 4 },
-      { id: "ST-05.2", name: "Condição de pagamento (à vista/parcelado, modo aceito)", status: "done", done: 3, total: 3 },
+      { id: "ST-05.1", name: "CRUD de Fornecedores", status: "done", done: 4, total: 4 },
+      { id: "ST-05.2", name: "Condição de pagamento", status: "done", done: 3, total: 3 },
+      { id: "ST-05.3", name: "Fornecedores: busca e ordenação (TL-A10)", status: "done", done: 3, total: 4,
+        note: "TA-05.3.4 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-05.4", name: "Chave Pix no cadastro de Fornecedor", status: "done", done: 3, total: 3 },
     ] },
-  { id: "EP-06", name: "Orçamentos & Aprovação do Cliente", status: "done", done: 19, total: 19,
+  { id: "EP-06", name: "Orçamentos & Aprovação do Cliente", status: "done", done: 28, total: 28,
     stories: [
-      { id: "ST-06.1", name: "Criação e publicação de Orçamentos (1..N Fornecedores participantes)", status: "done", done: 6, total: 6 },
-      { id: "ST-06.2", name: "Card de Orçamento no Feed (arquiteto e cliente, decisão direto no card)", status: "done", done: 4, total: 4 },
-      { id: "ST-06.3", name: "Aprovação do Cliente (TL-C08, Escolher/Recusar)", status: "done", done: 5, total: 5 },
-      { id: "ST-06.4", name: "Card de Orçamento no Resumo (previsto x executado, cor por severidade)", status: "done", done: 4, total: 4 },
+      { id: "ST-06.1", name: "Criação e publicação de Orçamentos Atualizado", status: "done", done: 10, total: 10 },
+      { id: "ST-06.3", name: "Aprovação do Cliente Atualizado — implementar antes de ST-06.2 (o card do Feed reaproveita a ação de decisão criada aqui)", status: "done", done: 6, total: 6 },
+      { id: "ST-06.2", name: "Card de Orçamento no Feed Atualizado — depende de ST-06.3 (TL-C08 e a ação de decisão já precisam existir)", status: "done", done: 4, total: 4 },
+      { id: "ST-06.4", name: "Card de Orçamento no Resumo", status: "done", done: 4, total: 4 },
+      { id: "ST-06.5", name: "Busca em Orçamentos (TL-A11) e ajuste de espaçamento no Shell da Obra", status: "done", done: 4, total: 4 },
     ] },
-  { id: "EP-07", name: "Faturamento & Relatório Semanal", status: "none", done: 0, total: 19,
+  { id: "EP-07", name: "Faturamento & Relatório Semanal", status: "partial", done: 20, total: 25,
     stories: [
-      { id: "ST-07.1", name: "Geração de Fatura ao decidir sobre Orçamento", status: "none", done: 0, total: 3, note: "Próxima story a executar." },
-      { id: "ST-07.2", name: "Aba Faturamento (TL-A09/TL-C06)", status: "none", done: 0, total: 3 },
-      { id: "ST-07.3", name: "Relatório Semanal automático (job + notificação)", status: "none", done: 0, total: 6 },
-      { id: "ST-07.4", name: "Configuração e Orçamento previsto", status: "none", done: 0, total: 4 },
-      { id: "ST-07.5", name: "Relatório em PDF", status: "none", done: 0, total: 3 },
+      { id: "ST-07.1", name: "Solicitação de Compra/Serviço Substituído (2026-09-25)", status: "done", done: 4, total: 4 },
+      { id: "ST-07.1b", name: "Anexo de NF, lançamento manual de Fatura e controle de entrega", status: "partial", done: 4, total: 5 },
+      { id: "ST-07.2", name: "Aba Faturamento", status: "done", done: 2, total: 3,
+        note: "TA-07.2.3 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-07.3", name: "Relatório Semanal automático", status: "done", done: 5, total: 6,
+        note: "TA-07.3.6 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-07.4", name: "Configuração e Orçamento previsto", status: "done", done: 3, total: 4,
+        note: "TA-07.4.4 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-07.5", name: "Relatório em PDF", status: "done", done: 2, total: 3,
+        note: "TA-07.5.3 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
     ] },
-  { id: "EP-08", name: "Notificações (in-app + push)", status: "none", done: 0, total: 8,
+  { id: "EP-08", name: "Notificações (in-app + push)", status: "done", done: 7, total: 8,
     stories: [
-      { id: "ST-08.1", name: "Central de notificações in-app", status: "none", done: 0, total: 5 },
-      { id: "ST-08.2", name: "Push via Web Push API", status: "none", done: 0, total: 3 },
+      { id: "ST-08.1", name: "Central de notificações in-app", status: "done", done: 4, total: 5,
+        note: "TA-08.1.5 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-08.2", name: "Push via Web Push API", status: "done", done: 3, total: 3 },
     ] },
-  { id: "EP-09", name: "Painel administrativo da plataforma", status: "none", done: 0, total: 13,
+  { id: "EP-09", name: "Painel administrativo da plataforma", status: "partial", done: 10, total: 24,
     stories: [
-      { id: "ST-09.1", name: "Autenticação e telas do admin", status: "none", done: 0, total: 4 },
-      { id: "ST-09.2", name: "Ativar/suspender e mudar plano", status: "none", done: 0, total: 3 },
-      { id: "ST-09.3", name: "Auditoria admin", status: "none", done: 0, total: 3 },
-      { id: "ST-09.4", name: "Job de agregação de uso", status: "none", done: 0, total: 1 },
-      { id: "ST-09.5", name: "Tela de conta suspensa do arquiteto", status: "none", done: 0, total: 2 },
+      { id: "ST-09.1", name: "Autenticação e telas do admin", status: "done", done: 3, total: 4,
+        note: "TA-09.1.4 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-09.2", name: "Ativar/suspender e mudar plano", status: "done", done: 2, total: 3,
+        note: "TA-09.2.3 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-09.3", name: "Auditoria admin", status: "done", done: 2, total: 3,
+        note: "TA-09.3.3 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-09.4", name: "Job de agregação de uso", status: "done", done: 1, total: 1 },
+      { id: "ST-09.5", name: "Tela de conta suspensa do arquiteto (N-05)", status: "done", done: 2, total: 3,
+        note: "TA-09.5.2 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+      { id: "ST-09.6", name: "Indicadores gerenciais do painel admin", status: "none", done: 0, total: 10,
+        note: "Backlog — indicadores gerenciais do painel admin, nenhuma tarefa iniciada." },
     ] },
   { id: "EP-10", name: "Segurança transversal & LGPD baseline", status: "cross", done: 0, total: 7,
     stories: [
-      { id: "TA-10.1–10.7", name: "Checklist central (isolamento de tenant, autorização, validação, headers, LGPD...)", status: "cross",
-        note: "Não é trabalho isolado: cada regra é validada dentro da story do épico que toca a rota correspondente. O 0% é só o checklist central, não segurança real ausente." },
+      { id: "TA-10.1–10.7", name: "Checklist central (isolamento de tenant, autorização, validação, headers, LGPD...)", status: "cross", done: 0, total: 7,
+        note: "Não é trabalho isolado: cada regra SEC-XX é validada dentro da story do épico que toca a rota correspondente. O 0% é só o checklist central, não segurança real ausente." },
     ] },
-  { id: "EP-11", name: "Qualidade, observabilidade & deploy", status: "none", done: 0, total: 11,
+  { id: "EP-11", name: "Qualidade, observabilidade & deploy", status: "partial", done: 2, total: 11,
     stories: [
-      { id: "ST-11.1", name: "Testabilidade", status: "none", done: 0, total: 4 },
-      { id: "ST-11.2", name: "Observabilidade", status: "none", done: 0, total: 4 },
+      { id: "ST-11.1", name: "Testabilidade", status: "partial", done: 1, total: 4 },
+      { id: "ST-11.2", name: "Observabilidade", status: "partial", done: 1, total: 4 },
       { id: "ST-11.3", name: "Deploy e lançamento", status: "none", done: 0, total: 3 },
     ] },
-  { id: "EP-12", name: "Débito técnico: Sidebar e Cronograma", status: "partial", done: 5, total: 6,
+  { id: "EP-12", name: "Débito técnico: refinamentos de Sidebar e Cronograma", status: "done", done: 5, total: 6,
     stories: [
-      { id: "ST-12.1", name: "Refinamentos de UX do Cronograma e da Sidebar", status: "partial", done: 5, total: 6,
-        note: "TA-12.1.6 (Playwright) pendente — escopo de QA. As 4 tarefas funcionais + o logo (TA-12.1.5) já estavam implementadas; o checklist só não tinha sido atualizado (achado ao cruzar com o board do ClickUp, 23/09)." },
+      { id: "ST-12.1", name: "Refinamentos de UX do Cronograma e da Sidebar (débito técnico)", status: "done", done: 5, total: 6,
+        note: "TA-12.1.6 (testes automatizados) pendente(s) — backlog de QA, não bloqueia a story." },
+    ] },
+  { id: "EP-13", name: "Refatoração da UI mobile", status: "partial", done: 30, total: 40,
+    stories: [
+      { id: "ST-13.1", name: "Refatoração da UI mobile conforme o protótipo", status: "partial", done: 28, total: 29,
+        note: "TA-13.1.5 (home do cliente) pendente por decisão do usuário — falta o frame de cliente no protótipo do Figma. O PR #95 (28 das 29 tarefas) já foi mesclado na dev." },
+      { id: "ST-13.2", name: "Testes automatizados da UI mobile", status: "partial", done: 2, total: 11 },
+    ] },
+  { id: "EP-14", name: "Refino visual do app", status: "partial", done: 14, total: 21,
+    stories: [
+      { id: "ST-14.1", name: "Fundação visual e recomposição das telas", status: "partial", done: 14, total: 15,
+        note: "TA-14.1.11 (Cronograma) está como parcial no doc — \"fim de semana um tom abaixo\" ainda falta; o board a marca como concluída. A confirmar. PR #99 mesclado na dev." },
+      { id: "ST-14.2", name: "Testes do refino visual", status: "none", done: 0, total: 6 },
     ] },
 ];
 
